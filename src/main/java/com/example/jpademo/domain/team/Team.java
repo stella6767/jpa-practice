@@ -22,6 +22,6 @@ public class Team {
     @Column(nullable = false, length = 100, unique = true)
     private String name;
 
-    private String money;
+    private String motto; //팀의 사훈
 
 }
