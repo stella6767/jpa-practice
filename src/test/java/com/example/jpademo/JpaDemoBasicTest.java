@@ -5,9 +5,14 @@ import com.example.jpademo.domain.member.Member;
 import com.example.jpademo.domain.member.QMember;
 import com.example.jpademo.domain.team.QTeam;
 import com.example.jpademo.domain.team.Team;
+import com.example.jpademo.dto.MemberDto;
+import com.example.jpademo.dto.MyMemberDto;
+import com.example.jpademo.dto.QMemberDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
@@ -521,5 +526,166 @@ public class JpaDemoBasicTest {
 
         }
     }
+
+
+    @Test
+    public void simpleProjection(){
+
+        List<String> result = queryFactory
+                .select(member.username) //select 절에 나열하는 것을 프로젝션
+                .from(member)
+                .fetch();
+    }
+
+
+    @Test
+    public void tupleProjection(){
+
+        List<Tuple> result = queryFactory
+                .select(member.username, member.age)
+                .from(member)
+                .fetch();  //tuple은 querydsl에 종속적이므로, 이걸 리턴하기보다는 모든 자바 생태계에 쓸 수 있는 dto 로 던져주자..
+
+        for (Tuple tuple : result) {
+            String username = tuple.get(member.username);
+
+            System.out.println("username=>" + username);
+        }
+    }
+
+
+    @Test
+    public void findDtoByJPQL(){
+        List<MemberDto> resultList = em.createQuery("select new com.example.jpademo.dto.MemberDto(m.username, m.age) from Member m", MemberDto.class)
+                .getResultList();
+
+        for (MemberDto memberDto : resultList) {
+            System.out.println("memberDto => " + memberDto);
+
+        }
+    }
+
+    /**
+     * querydsl 결과를 dto로 반환하는 3가지 방법
+     * 1. 프로퍼티 접근
+     * 2. 필드 직접 접근
+     * 3. 생성자 사용
+     */
+
+
+    @Test
+    public void findDtoBySetter(){
+
+        List<MemberDto> result = queryFactory
+                .select(Projections.bean(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+
+    @Test
+    public void findDtoByField(){ //setter 없어도 상관 X
+
+        List<MemberDto> result = queryFactory
+                .select(Projections.fields(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+    @Test
+    public void findDtoByConstructor(){ //setter 없어도 상관 X
+
+        List<MemberDto> result = queryFactory
+                .select(Projections.constructor(MemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+    @Test
+    public void findMyDtoByField(){ //setter 없어도 상관 X
+
+        List<MyMemberDto> result = queryFactory
+                .select(Projections.fields(MyMemberDto.class,
+                        member.username.as("name"), //별칭이 다를 때
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+    @Test
+    public void findMyDto(){
+
+        QMember memberSub = new QMember("memberSub");
+
+        List<MyMemberDto> result = queryFactory
+                .select(Projections.fields(MyMemberDto.class,
+                        member.username.as("name"), //별칭이 다를 때
+
+                        //서브쿼리에 별칭 적용
+                        ExpressionUtils.as(JPAExpressions
+                        .select(memberSub.age.max())
+                        .from(memberSub), "age")
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+    @Test
+    public void findMyDtoByConstructor(){ //setter 없어도 상관 X
+
+        List<MyMemberDto> result = queryFactory
+                .select(Projections.constructor(MyMemberDto.class,
+                        member.username,
+                        member.age
+                ))
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+    }
+
+
+
+    @Test
+    public void findDtoByQueryProjection(){
+        //construtor 와의 차이점은 컴파일 시점에서, 에러 체크확인가능
+
+        List<MemberDto> result = queryFactory
+                .select(new QMemberDto(member.username, member.age)) //cmd + p
+                .from(member)
+                .fetch();
+
+        System.out.println("result " + result);
+        //단점은 dto가 querydsl에 의존적이게 됨.
+    }
+
+
+
+
 
 }
