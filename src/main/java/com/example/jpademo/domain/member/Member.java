@@ -1,26 +1,54 @@
 package com.example.jpademo.domain.member;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.jpademo.domain.team.Team;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
+
+@ToString(of = {"id","username","age"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter
 @Entity
 public class Member {
 
     @Id //Pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Table, auto_increment, Sequence
-    private Integer id;
+    @Column(name="member_id")
+    private Long id;
 
-    @Column(nullable = false, length = 100, unique = true)
-    private String name;
+    private String username;
 
+    private Integer age;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "team_id")
+    private Team team;
+
+
+    public Member(String username) {
+        this(username, 0);
+    }
+
+    public Member(String username, Integer age) {
+        this(username, age, null);
+    }
+
+    public Member(String username, Integer age, Team team){
+        this.username = username;
+        this.age = age;
+
+        if(team != null){
+            changeTeam(team);
+        }
+    }
+
+
+    public void changeTeam(Team team){
+        this.team = team;
+        team.getMembers().add(this);
+    }
 
 }

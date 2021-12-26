@@ -6,20 +6,22 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.example.jpademo.domain.member.QMember.*;
+
 @RequiredArgsConstructor
 @Repository  //QueryDsl 용도
 public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    QMember member = QMember.member;
+
 
     @Override
     public List<Member> findMemberByNameIsNull() {
 
         return jpaQueryFactory
                 .selectFrom(member)
-                .where(member.name.isNull())
+                .where(member.username.isNull())
                 .fetch();
     }
 }

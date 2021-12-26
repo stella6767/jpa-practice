@@ -1,27 +1,30 @@
 package com.example.jpademo.domain.team;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.example.jpademo.domain.member.Member;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
+@ToString(of = {"id","name"})
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @Setter
 @Entity
 public class Team {
 
     @Id //Pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //Table, auto_increment, Sequence
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false, length = 100, unique = true)
     private String name;
 
-    private String motto; //팀의 사훈
+    @OneToMany(mappedBy = "team")
+    private List<Member> members = new ArrayList<>();
 
+    public Team(String name) {
+        this.name = name;
+    }
 }
