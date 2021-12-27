@@ -5,11 +5,13 @@ import com.example.jpademo.dto.MemberTeamDto;
 import com.example.jpademo.dto.QMemberTeamDto;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -86,8 +88,10 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 
         long total = result.getTotal();
         List<MemberTeamDto> content = result.getResults();
-
+//
         return new PageImpl<>(content, pageable, total);
+
+
     }
 
     @Override
@@ -95,10 +99,26 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         List<MemberTeamDto> content = getMemberTeamDtos(condition, pageable);
         //return result.getResults();
 
-        long total = getTotal(condition); //extract method/ alt + enter
+        //long total = getTotal(condition); //extract method/ alt + enter
 
 
-        return new PageImpl<>(content, pageable, total);
+        JPAQuery<Member> countQuery = queryFactory
+                .select(member)
+                .from(member)
+                .leftJoin(member.team, team)
+                .where(
+                        usernameEq(condition.getUsername()),
+                        teamNameEq(condition.getTeamName()),
+                        ageGoe(condition.getAgeGoe()),
+                        ageLoe(condition.getAgeLoe())
+                );
+
+        //return new PageImpl<>(content, pageable, total);
+
+        //content size가 PAGE size 보다 작을 때 굳이 total count query를 날리지 않는다.
+        //return PageableExecutionUtils.getPage(content, pageable, ()-> countQuery.fetchCount());
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchCount);
+
     }
 
     private long getTotal(MemberSearchCondition condition) {
