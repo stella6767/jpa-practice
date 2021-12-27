@@ -11,7 +11,7 @@ server:
 
 spring:
   profiles:
-    active: local
+    active: test
   datasource:
     #url: jdbc:h2:file:~/desktop/demo
     url: jdbc:h2:file:C:\kangminkyu\logs\data

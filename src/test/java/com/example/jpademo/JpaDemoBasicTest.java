@@ -137,26 +137,26 @@ public class JpaDemoBasicTest {
     @Test
     public void resultFetch(){
 
-        List<Member> fetch = queryFactory
-                .selectFrom(member)
-                .fetch();
-        Member fetchOne = queryFactory
-                .selectFrom(member)
-                .fetchOne();
-
-        Member fetchFirst = queryFactory
-                .selectFrom(member)
-                .fetchFirst();
-
-        QueryResults<Member> results = queryFactory
-                .selectFrom(member)
-                .fetchResults();
-        List<Member> content = results.getResults();
-        results.getTotal();
-
-        long total = queryFactory
-                .selectFrom(member)
-                .fetchCount();
+//        List<Member> fetch = queryFactory
+//                .selectFrom(member)
+//                .fetch();
+//        Member fetchOne = queryFactory
+//                .selectFrom(member)
+//                .fetchOne();
+//
+//        Member fetchFirst = queryFactory
+//                .selectFrom(member)
+//                .fetchFirst();
+//
+//        QueryResults<Member> results = queryFactory
+//                .selectFrom(member)
+//                .fetchResults();
+//        List<Member> content = results.getResults();
+//        results.getTotal();
+//
+//        long total = queryFactory
+//                .selectFrom(member)
+//                .fetchCount();
 
     }
 
@@ -328,6 +328,8 @@ public class JpaDemoBasicTest {
         }
     }
 
+    //
+
 
     @PersistenceUnit
     EntityManagerFactory emf;
@@ -351,7 +353,7 @@ public class JpaDemoBasicTest {
     /**
      * 아직 이해를 못했음
      */
-    
+
     @Test
     public void fetchJoinUse(){
         em.flush();
@@ -375,7 +377,7 @@ public class JpaDemoBasicTest {
 
     @Test
     public void subQuery(){
- 
+
         QMember memberSub = new QMember("memberSub");
 
         List<Member> result = queryFactory

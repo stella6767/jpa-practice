@@ -13,7 +13,7 @@ public class QueryDslConfig {
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Bean
+    @Bean //동시성 문제 신경 안 써도 됨. 트랜잭션 붙여주면 트랜잭션 단위로 다 다른 것으로 할당해서 바인딩해줌
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(entityManager);
     }
