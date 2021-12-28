@@ -35,7 +35,7 @@ public class Member { //주 테이블
      * @param username
      */
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) //즉시로딩전략, 컬렉션 객체가 아니면 그냥 eager 쓰자
     @JoinColumn(name = "team_id") //외래키의 주인! joinCoulumn을 안 쓰면, JPA는 연결테이블을 중간에 두고 연관관계를
     private Team team; //관리하는 조인 테이블 전략을 기본으로 사용
 
@@ -48,9 +48,15 @@ public class Member { //주 테이블
      * 대상 테이블에 외래키 = DBA 가 선호, 테이블 관계를 일대다로 변경할떄, 테이블 구조를 그대로 유지가능
      */
 
+    /**
+     * 외래키에 null을 허용하는 관계를 선택적 비식별
+     * 외래키에 not null 설정을 적용해주면, 내부 조인 쿼리 생성. nullable=false
+     */
+
     @OneToOne //주 테이블의 자기 필드명
-    @JoinColumn(name = "locker_id") //연관관계의 주인
+    @JoinColumn(name = "locker_id", nullable = true) //연관관계의 주인
     private Locker locker;
+
 
 
     /**
@@ -74,7 +80,7 @@ public class Member { //주 테이블
      * 비식별 관계: 받아온 식별자는 외래키로만 사용하고, 새로운 식별자를 추가. (추천)
       */
 
-    @OneToMany(mappedBy = "member") //역방향
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY) //역방향
     private List<Order> orders;
 
     public Member(String username) {
@@ -100,4 +106,28 @@ public class Member { //주 테이블
         team.getMembers().add(this);
     }
 
+    public void printMember(){
+
+        /**
+         * 회원 엔티티를 조회할 때, 회원과 연관된 팀 엔티티까지 데이터베이스에서
+         * 함께 조회하는 것은 비효율적
+         * JPA는 이런 문제를 해결하려고, 엔티티가 실제 사용될 때까지 DB 조회를 지연하는
+         * 방법을 제공(lazy loading) 팀 엔티티 값을 실제 사용하는 시점에서 데이터를 조회
+         * 지연 로딩 기능을 사용하려면, 실제 엔티티 객체 대신 가짜 객체가 필요한데, 이것을 프록시 객체라 한다
+         */
+
+
+
+        System.out.println("회원 이름 " + this.getUsername());
+    }
+
 }
+
+
+/**
+ * JPA 기본 패치 전략
+ * @ManyToOne, @OneToOne : 즉시 로딩
+ * @OneToMany, @ManyToMany: 지연 로딩
+ * 추천하는 방법은 모든 연관관계에 일단은 지연로딩하고, 추후 상황봐가며 변경
+ */
+

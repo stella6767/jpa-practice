@@ -31,4 +31,5 @@ public class MemberProductId2 implements Serializable {
     public int hashCode() {
         return Objects.hash(member, product);
     }
+
 }
