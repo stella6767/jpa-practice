@@ -83,6 +83,23 @@ public class Member { //주 테이블
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY) //역방향
     private List<Order> orders;
 
+
+
+
+    //복합 값 타입
+    @Embedded
+    @AttributeOverrides({  //임베디드 타입에 정의한 매핑정보를 재정의
+            @AttributeOverride(name = "city", column = @Column(name = "company_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "company_street"))
+    })
+    private Address address;
+
+    /**
+     *  임베디드 타입이 null 이면 매핑한 칼럼 값 모두 null 이 된다.
+     * 임베디드 타입 같은 값 타입을 여러 엔티티에서 공유하면 위험하다.
+     */
+
+
     public Member(String username) {
         this(username, 0);
     }
