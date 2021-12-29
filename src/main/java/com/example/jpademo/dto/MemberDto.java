@@ -1,9 +1,11 @@
 package com.example.jpademo.dto;
 
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @NoArgsConstructor
 @Data
 public class MemberDto {
