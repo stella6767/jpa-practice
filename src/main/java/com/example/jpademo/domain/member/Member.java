@@ -87,6 +87,7 @@ public class Member { //주 테이블
 
 
     //복합 값 타입
+
     @Embedded
     @AttributeOverrides({  //임베디드 타입에 정의한 매핑정보를 재정의
             @AttributeOverride(name = "city", column = @Column(name = "company_city")),
@@ -97,6 +98,8 @@ public class Member { //주 테이블
     /**
      *  임베디드 타입이 null 이면 매핑한 칼럼 값 모두 null 이 된다.
      * 임베디드 타입 같은 값 타입을 여러 엔티티에서 공유하면 위험하다.
+     * 값 타입을 하나 이상 저장하려면,컬렉션에 보관하고 @ElementCollection @CollectionTable
+     * 를 사용하면 된다.
      */
 
 
@@ -148,3 +151,13 @@ public class Member { //주 테이블
  * 추천하는 방법은 모든 연관관계에 일단은 지연로딩하고, 추후 상황봐가며 변경
  */
 
+/**
+ * 엔티티타입특징
+ * 1. 식별자가 있다. @id
+ * 2. 생명주기가 있다.
+ * 3. 공유할 수 있다.
+ * 값 타입 특징
+ * 1. 식별자가 없다
+ * 2. 생명 주기를 엔티티에 의존한다
+ * 3. 공유하지 않는 것이 안전하다.
+ */
