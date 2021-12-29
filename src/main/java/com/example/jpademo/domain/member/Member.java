@@ -172,3 +172,9 @@ public class Member { //주 테이블
  * 3. 공유하지 않는 것이 안전하다.
  */
 
+
+/**
+ * JPA 의 글로벌 패치 전략은 기본값은 다음과 같다.
+ * @OneToOne, @ManyToOne: 기본 패치 전략은 즉시 로딩
+ * @OneToMany, @ManyToMany: 기본 패치 전략은 지연 로딩
+ */
