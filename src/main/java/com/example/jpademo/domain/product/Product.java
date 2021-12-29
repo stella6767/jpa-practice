@@ -21,8 +21,8 @@ public class Product {
 
     private String name;
 
-    @ManyToMany(mappedBy = "products") //역방향 추가
-    private List<Member> members = new ArrayList<>();
+//    @ManyToMany(mappedBy = "products") //역방향 추가
+//    private List<Member> members = new ArrayList<>();
     
     //굳이 객체 그래프 탐색 기능이 필요하지 않다 판단돼서, order 연관관계 만들지 않음
     

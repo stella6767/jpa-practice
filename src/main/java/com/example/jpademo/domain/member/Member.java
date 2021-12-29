@@ -6,6 +6,7 @@ import com.example.jpademo.domain.memberproduct.MemberProduct;
 import com.example.jpademo.domain.order.Order;
 import com.example.jpademo.domain.product.Product;
 import com.example.jpademo.domain.team.Team;
+import com.example.jpademo.utills.BooleanToYNConverter;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@Convert(converter = BooleanToYNConverter.class, attributeName = "vip")
 @ToString(of = {"id","username","age"}) //연관관계 필드는 제외한다. 무한루프에 빠지지 않도록
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter @Setter
@@ -81,6 +83,8 @@ public class Member { //주 테이블
       */
 
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY) //역방향
+    //@OrderColumn(name = "position") //순서가 있는 특수한 컬렉션으로 인식, DB에 순서 값을 저장해서 조회할 때 사용, 실무에서 잘 안 쓰임
+    //@OrderBy("orderAmount desc, id asc") //이건 사용
     private List<Order> orders;
 
 
@@ -102,6 +106,8 @@ public class Member { //주 테이블
      * 를 사용하면 된다.
      */
 
+
+    private boolean vip;
 
     public Member(String username) {
         this(username, 0);
@@ -141,6 +147,10 @@ public class Member { //주 테이블
         System.out.println("회원 이름 " + this.getUsername());
     }
 
+
+
+
+
 }
 
 
@@ -161,3 +171,4 @@ public class Member { //주 테이블
  * 2. 생명 주기를 엔티티에 의존한다
  * 3. 공유하지 않는 것이 안전하다.
  */
+
