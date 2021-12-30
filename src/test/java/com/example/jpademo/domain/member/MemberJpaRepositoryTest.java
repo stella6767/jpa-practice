@@ -47,9 +47,7 @@
 //    public void basicTest2(){
 //        Member member = new Member("member1", 10);
 //        memberJpaRepository.save(member);
-//
-//
-//
+
 //        List<Member> result1 = memberJpaRepository.findAllQueryDsl();
 //        assertThat(result1).containsExactly(member);
 //
