@@ -38,5 +38,10 @@ public class Member extends BaseTimeEntity { //주 테이블
         System.out.println("회원 이름 " + this.getUsername());
     }
 
+    public Member(String username, Integer age, boolean vip) {
+        this.username = username;
+        this.age = age;
+        this.vip = vip;
+    }
 }
 
