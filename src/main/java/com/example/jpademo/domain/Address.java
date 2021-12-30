@@ -1,11 +1,10 @@
-package com.example.jpademo.domain.member;
+package com.example.jpademo.domain;
 
 
 import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
 import java.util.Objects;
 
 @Getter

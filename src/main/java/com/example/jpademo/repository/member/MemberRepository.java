@@ -1,5 +1,7 @@
-package com.example.jpademo.domain.member;
+package com.example.jpademo.repository.member;
 
+import com.example.jpademo.domain.member.Member;
+import com.example.jpademo.repository.member.MemberCustomRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
